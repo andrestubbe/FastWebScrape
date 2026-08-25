@@ -19,7 +19,7 @@ String cleanText = scraper.extractReadableText(rawHtml);
 [![Platform](https://img.shields.io/badge/Platform-Windows%2010+-lightgrey.svg)]()
 [![JitPack](https://img.shields.io/badge/JitPack-ready-green.svg)](https://jitpack.io/#andrestubbe/FastScrape)
 
-[![FastKeyboard Showcase](docs/screenshot.png)](https://www.youtube.com/watch?v=BZsqQl7WqWk)
+[![FastScrape Showcase](docs/screenshot.png)](https://youtu.be/PlLANMEbWPk)
 
 
 ## Table of Contents
