@@ -37,7 +37,87 @@ public class Demo {
         "https://en.wikipedia.org/wiki/Assembly_language",
         "https://en.wikipedia.org/wiki/Compiler",
         "https://en.wikipedia.org/wiki/Just-in-time_compilation",
-        "https://en.wikipedia.org/wiki/Parallel_computing"
+        "https://en.wikipedia.org/wiki/Parallel_computing",
+        "https://en.wikipedia.org/wiki/Central_processing_unit",
+        "https://en.wikipedia.org/wiki/Microprocessor",
+        "https://en.wikipedia.org/wiki/Instruction_set_architecture",
+        "https://en.wikipedia.org/wiki/X86",
+        "https://en.wikipedia.org/wiki/X86-64",
+        "https://en.wikipedia.org/wiki/AArch64",
+        "https://en.wikipedia.org/wiki/MIPS_architecture",
+        "https://en.wikipedia.org/wiki/PowerPC",
+        "https://en.wikipedia.org/wiki/SPARC",
+        "https://en.wikipedia.org/wiki/Supercomputer",
+        "https://en.wikipedia.org/wiki/High-performance_computing",
+        "https://en.wikipedia.org/wiki/Multithreading_(computer_architecture)",
+        "https://en.wikipedia.org/wiki/Hyper-threading",
+        "https://en.wikipedia.org/wiki/Multi-core_processor",
+        "https://en.wikipedia.org/wiki/Cache_(computing)",
+        "https://en.wikipedia.org/wiki/CPU_cache",
+        "https://en.wikipedia.org/wiki/Branch_predictor",
+        "https://en.wikipedia.org/wiki/Out-of-order_execution",
+        "https://en.wikipedia.org/wiki/Instruction_pipelining",
+        "https://en.wikipedia.org/wiki/Superscalar_processor",
+        "https://en.wikipedia.org/wiki/Very_long_instruction_word",
+        "https://en.wikipedia.org/wiki/Register_file",
+        "https://en.wikipedia.org/wiki/Memory_management_unit",
+        "https://en.wikipedia.org/wiki/Translation_lookaside_buffer",
+        "https://en.wikipedia.org/wiki/Direct_memory_access",
+        "https://en.wikipedia.org/wiki/Virtual_memory",
+        "https://en.wikipedia.org/wiki/Page_table",
+        "https://en.wikipedia.org/wiki/Random-access_memory",
+        "https://en.wikipedia.org/wiki/DDR4_SDRAM",
+        "https://en.wikipedia.org/wiki/DDR5_SDRAM",
+        "https://en.wikipedia.org/wiki/Non-volatile_memory",
+        "https://en.wikipedia.org/wiki/Solid-state_drive",
+        "https://en.wikipedia.org/wiki/NVM_Express",
+        "https://en.wikipedia.org/wiki/PCI_Express",
+        "https://en.wikipedia.org/wiki/Motherboard",
+        "https://en.wikipedia.org/wiki/Operating_system",
+        "https://en.wikipedia.org/wiki/Linux_kernel",
+        "https://en.wikipedia.org/wiki/Microsoft_Windows",
+        "https://en.wikipedia.org/wiki/MacOS",
+        "https://en.wikipedia.org/wiki/FreeBSD",
+        "https://en.wikipedia.org/wiki/POSIX",
+        "https://en.wikipedia.org/wiki/System_call",
+        "https://en.wikipedia.org/wiki/Kernel_(operating_system)",
+        "https://en.wikipedia.org/wiki/Microkernel",
+        "https://en.wikipedia.org/wiki/Monolithic_kernel",
+        "https://en.wikipedia.org/wiki/Process_(computing)",
+        "https://en.wikipedia.org/wiki/Thread_(computing)",
+        "https://en.wikipedia.org/wiki/Fiber_(computer_science)",
+        "https://en.wikipedia.org/wiki/Coroutine",
+        "https://en.wikipedia.org/wiki/Asynchronous_I/O",
+        "https://en.wikipedia.org/wiki/Epoll",
+        "https://en.wikipedia.org/wiki/Kqueue",
+        "https://en.wikipedia.org/wiki/Input/output_completion_port",
+        "https://en.wikipedia.org/wiki/Memory-mapped_file",
+        "https://en.wikipedia.org/wiki/Shared_memory",
+        "https://en.wikipedia.org/wiki/Inter-process_communication",
+        "https://en.wikipedia.org/wiki/Pipeline_(Unix)",
+        "https://en.wikipedia.org/wiki/Unix_domain_socket",
+        "https://en.wikipedia.org/wiki/Network_socket",
+        "https://en.wikipedia.org/wiki/Transmission_Control_Protocol",
+        "https://en.wikipedia.org/wiki/User_Datagram_Protocol",
+        "https://en.wikipedia.org/wiki/Internet_Protocol",
+        "https://en.wikipedia.org/wiki/IPv4",
+        "https://en.wikipedia.org/wiki/IPv6",
+        "https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol",
+        "https://en.wikipedia.org/wiki/HTTP/2",
+        "https://en.wikipedia.org/wiki/HTTP/3",
+        "https://en.wikipedia.org/wiki/Transport_Layer_Security",
+        "https://en.wikipedia.org/wiki/Domain_Name_System",
+        "https://en.wikipedia.org/wiki/URL",
+        "https://en.wikipedia.org/wiki/HTML",
+        "https://en.wikipedia.org/wiki/HTML5",
+        "https://en.wikipedia.org/wiki/CSS",
+        "https://en.wikipedia.org/wiki/JavaScript",
+        "https://en.wikipedia.org/wiki/WebAssembly",
+        "https://en.wikipedia.org/wiki/JSON",
+        "https://en.wikipedia.org/wiki/XML",
+        "https://en.wikipedia.org/wiki/UTF-8",
+        "https://en.wikipedia.org/wiki/ASCII",
+        "https://en.wikipedia.org/wiki/Garbage_collection_(computer_science)"
     );
 
     public static void main(String[] args) throws Exception {
@@ -50,8 +130,17 @@ public class Demo {
         FastWebScrape scraper = FastWebScrape.open();
         FastWebSpider spider = FastWebSpider.open();
 
+        // ── Phase 0: Target Ingestion Queue Preview ─────────────────────────
+        System.out.println(darkGray("[Target Queue]") + " " + boldWhite("Loaded " + TARGET_PAGES.size() + " Hardware, Architecture & Systems Nodes:"));
+        for (int i = 0; i < TARGET_PAGES.size(); i++) {
+            boolean isLast = (i == TARGET_PAGES.size() - 1);
+            String branch = isLast ? "└──" : "├──";
+            System.out.printf("  %s %s %s\n", darkGray(branch), boldWhite(String.format("[%03d]", i + 1)), white(TARGET_PAGES.get(i)));
+        }
+        System.out.println();
+
         // ── Phase 1: High-Speed WinHTTP Multi-Node Ingestion ─────────────────
-        System.out.println(darkGray("[Phase 1]") + " " + boldWhite("FastWebSpider Native WinHTTP Ingestion") + darkGray(" (Downloading 20 heavy Wikipedia nodes)"));
+        System.out.println(darkGray("[Phase 1]") + " " + boldWhite("FastWebSpider Native WinHTTP Ingestion") + darkGray(" (Downloading " + TARGET_PAGES.size() + " live Wikipedia nodes via Virtual Threads)"));
 
         long fetchT0 = System.currentTimeMillis();
         List<CompletableFuture<FastWebSpider.SpiderResponse>> futures = new ArrayList<>();
@@ -75,7 +164,7 @@ public class Demo {
         System.out.printf("  %s %s across %s in %s (%s)\n\n",
                 darkGray("└── Ingested"),
                 boldWhite(String.format("%.2f MB raw HTML", mbTotal)),
-                boldWhite("20 live nodes"),
+                boldWhite(TARGET_PAGES.size() + " live nodes"),
                 boldWhite(String.format("%,d ms", fetchDuration)),
                 darkGray(String.format("%.1f MB/s via WinHTTP", mbPerSec)));
 
@@ -119,7 +208,7 @@ public class Demo {
 
             System.out.printf("  %s %s %-48s %s %s %s %s\n",
                     darkGray(nodeBranch),
-                    boldWhite(String.format("[%02d]", i + 1)),
+                    boldWhite(String.format("[%03d]", i + 1)),
                     white(shortUrl),
                     darkGray(String.format("| %,6d KB HTML", html.length / 1024)),
                     boldWhite(String.format("| %,6d µs", parseUs)),
@@ -186,7 +275,7 @@ public class Demo {
         long tokensSaved = rawEstTokens - cleanEstTokens;
 
         System.out.println(darkGray("========================================================================================================================"));
-        System.out.printf(" " + boldWhite("SCRAPING COMPLETE:") + darkGray(" Processed ") + boldWhite(String.format("%.2f MB", mbTotal)) + darkGray(" across 20 live nodes in ") + boldWhite(String.format("%,d ms native AVX2 time", totalParseMs)) + darkGray(" (%s)\n"),
+        System.out.printf(" " + boldWhite("SCRAPING COMPLETE:") + darkGray(" Processed ") + boldWhite(String.format("%.2f MB", mbTotal)) + darkGray(" across " + TARGET_PAGES.size() + " live nodes in ") + boldWhite(String.format("%,d ms native AVX2 time", totalParseMs)) + darkGray(" (%s)\n"),
                 boldWhite(String.format("%.1f GB/s SIMD throughput", throughputMbPerSec / 1024.0)));
         System.out.printf(" " + darkGray("Extracted ") + boldWhite(String.format("%,d clean chars", totalCleanChars)) + darkGray(" (-%.1f%% noise stripped) | Saved ") + boldWhite(String.format("%,d LLM Prompt Tokens", tokensSaved)) + darkGray(" from raw HTML bloat.\n"), overallReduction);
         System.out.printf(" " + darkGray("Harvested ") + boldWhite(String.format("%,d total encyclopedic reference links", totalLinksExtracted)) + darkGray(" in microsecond native bursts.\n"));
@@ -211,11 +300,12 @@ public class Demo {
             // Match genuine full prose paragraphs
             if (t.length() > 80 && !t.contains("disambiguation") && !t.startsWith("Jump to") && !t.startsWith("Main menu")
                     && !t.startsWith("Toggle ") && !t.startsWith("For other uses") && !t.startsWith("For the ")
-                    && !t.startsWith("{{") && !t.startsWith("Coordinates") && !t.startsWith("Page semi-protected")) {
+                    && !t.startsWith("{{") && !t.startsWith("Coordinates") && !t.startsWith("Page semi-protected")
+                    && !t.startsWith("For an expansion card") && !t.startsWith("This article")) {
                 return t;
             }
         }
-        // Fallback to title line or first substantial line
+        // Fallback to substantial line
         for (String l : lines) {
             String t = l.trim();
             if (t.length() > 50 && !t.startsWith("Toggle ") && !t.startsWith("Jump to") && !t.startsWith("Main menu")) {
