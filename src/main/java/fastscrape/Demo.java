@@ -86,6 +86,7 @@ public class Demo {
         long totalParseNanos = 0;
         long totalCleanChars = 0;
         int totalLinksExtracted = 0;
+        List<String> cleanDocuments = new ArrayList<>();
 
         for (int i = 0; i < TARGET_PAGES.size(); i++) {
             String url = TARGET_PAGES.get(i);
@@ -97,11 +98,13 @@ public class Demo {
             List<String> rawLinks = scraper.extractLinks(html);
             List<String> validLinks = filterWikiArticleLinks(rawLinks);
             List<String> rawHeadings = scraper.extractByTag(html, "h1");
+            List<String> rawH2s = scraper.extractByTag(html, "h2");
             long parseUs = (System.nanoTime() - parseT0) / 1000;
 
             totalParseNanos += (System.nanoTime() - parseT0);
             totalCleanChars += cleanText.length();
             totalLinksExtracted += validLinks.size();
+            cleanDocuments.add(cleanText);
 
             double reductionPct = 100.0 * (html.length - cleanText.length()) / html.length;
 
@@ -118,16 +121,23 @@ public class Demo {
                     darkGray(String.format("| %,5d links", validLinks.size())),
                     darkGray(String.format("| -%.1f%% noise", reductionPct)));
 
-            // Title line
-            System.out.printf("  │    ├── %s %s\n", darkGray("Title:"), boldWhite(truncate(cleanH1, 70)));
+            // 1. Title line
+            System.out.printf("  │    ├── %s %s\n", darkGray("Title:   "), boldWhite(truncate(cleanH1, 70)));
 
-            // Extract first meaningful content paragraph for LLM
-            String summarySnippet = findFirstMeaningfulParagraph(cleanText);
-            if (!summarySnippet.isEmpty()) {
-                System.out.printf("  │    ├── %s %s\n", darkGray("Excerpt:"), white(truncate(summarySnippet, 95)));
+            // 2. Sub-headings (H2) overview
+            List<String> cleanH2List = sanitizeHeadings(scraper, rawH2s);
+            if (!cleanH2List.isEmpty()) {
+                String h2Joined = String.join(" • ", cleanH2List.subList(0, Math.min(cleanH2List.size(), 4)));
+                System.out.printf("  │    ├── %s %s\n", darkGray("Sections:"), darkGray(truncate(h2Joined, 85)));
             }
 
-            // Stream 3 clean article links
+            // 3. Extract genuine encyclopedic paragraph for LLM
+            String summarySnippet = findFirstEncyclopedicParagraph(cleanText, cleanH1);
+            if (!summarySnippet.isEmpty()) {
+                System.out.printf("  │    ├── %s %s\n", darkGray("Synopsis:"), white(truncate(summarySnippet, 95)));
+            }
+
+            // 4. Stream 3 clean article links
             int previewCount = Math.min(validLinks.size(), 3);
             for (int p = 0; p < previewCount; p++) {
                 boolean isLast = (p == previewCount - 1);
@@ -140,41 +150,70 @@ public class Demo {
         }
         System.out.println();
 
-        // ── Phase 3: High-Fidelity LLM Context Preview ──────────────────────
-        System.out.println(darkGray("[Phase 3]") + " " + boldWhite("LLM CleanText Representation Sample") + darkGray(" (Raw plaintext stream from root node)"));
+        // ── Phase 3: High-Fidelity LLM Context Preview (Multi-Node Corpus) ──
+        System.out.println(darkGray("[Phase 3]") + " " + boldWhite("LLM Knowledge Corpus Context Sample") + darkGray(" (Extracted encyclopedic knowledge blocks)"));
         System.out.println();
 
-        byte[] firstHtml = payloads.get(0);
-        String sampleClean = scraper.extractReadableText(firstHtml).trim();
-        String[] lines = sampleClean.split("\n");
-        int shownLines = 0;
-        for (String line : lines) {
-            String trimmed = line.trim();
-            if (trimmed.length() > 25 && !trimmed.startsWith("Jump to") && !trimmed.startsWith("Main menu")) {
-                System.out.printf("  │  %s\n", white(truncate(trimmed, 114)));
-                shownLines++;
-                if (shownLines >= 4) break;
+        int[] sampleIndices = {0, 1, 6}; // SIMD, AVX, GPU
+        for (int idx : sampleIndices) {
+            if (idx < cleanDocuments.size()) {
+                String nodeUrl = TARGET_PAGES.get(idx);
+                String doc = cleanDocuments.get(idx);
+                String nodeTitle = extractPageTitleFromUrl(nodeUrl);
+                String bodyPara = findFirstEncyclopedicParagraph(doc, nodeTitle);
+                int estTokens = bodyPara.length() / 4;
+
+                System.out.printf("  %s %s %s\n",
+                        boldWhite(String.format("◆ [%s]", nodeTitle)),
+                        darkGray("—"),
+                        darkGray(String.format("~%d prompt tokens", estTokens)));
+                System.out.printf("  │  %s\n", white(truncate(bodyPara, 114)));
+                System.out.println("  │");
             }
         }
-        System.out.println();
 
         // ── Performance Summary Card ─────────────────────────────────────────
         long totalParseMs = totalParseNanos / 1_000_000;
         double overallReduction = 100.0 * (totalRawBytes - totalCleanChars) / totalRawBytes;
         double throughputMbPerSec = (totalRawBytes / (1024.0 * 1024.0)) / (Math.max(totalParseMs, 1) / 1000.0);
+        long rawEstTokens = totalRawBytes / 4;
+        long cleanEstTokens = totalCleanChars / 4;
+        long tokensSaved = rawEstTokens - cleanEstTokens;
 
         System.out.println(darkGray("========================================================================================================================"));
         System.out.printf(" " + boldWhite("SCRAPING COMPLETE:") + darkGray(" Processed ") + boldWhite(String.format("%.2f MB", mbTotal)) + darkGray(" across 20 live nodes in ") + boldWhite(String.format("%,d ms native AVX2 time", totalParseMs)) + darkGray(" (%s)\n"),
                 boldWhite(String.format("%.1f GB/s SIMD throughput", throughputMbPerSec / 1024.0)));
-        System.out.printf(" " + darkGray("Extracted ") + boldWhite(String.format("%,d clean chars", totalCleanChars)) + darkGray(" (-%.1f%% noise stripped) and harvested ") + boldWhite(String.format("%,d encyclopedic links", totalLinksExtracted)) + darkGray(" for LLMs.\n"), overallReduction);
+        System.out.printf(" " + darkGray("Extracted ") + boldWhite(String.format("%,d clean chars", totalCleanChars)) + darkGray(" (-%.1f%% noise stripped) | Saved ") + boldWhite(String.format("%,d LLM Prompt Tokens", tokensSaved)) + darkGray(" from raw HTML bloat.\n"), overallReduction);
+        System.out.printf(" " + darkGray("Harvested ") + boldWhite(String.format("%,d total encyclopedic reference links", totalLinksExtracted)) + darkGray(" in microsecond native bursts.\n"));
         System.out.println(darkGray("========================================================================================================================"));
     }
 
-    private static String findFirstMeaningfulParagraph(String text) {
+    private static List<String> sanitizeHeadings(FastScrape scraper, List<String> rawH2s) {
+        List<String> results = new ArrayList<>();
+        for (String raw : rawH2s) {
+            String clean = scraper.extractReadableText(raw.getBytes(StandardCharsets.UTF_8)).trim();
+            if (clean.length() > 2 && !clean.equalsIgnoreCase("Contents") && !clean.equalsIgnoreCase("References") && !clean.equalsIgnoreCase("See also") && !clean.equalsIgnoreCase("External links") && !clean.equalsIgnoreCase("Navigation menu")) {
+                results.add(clean);
+            }
+        }
+        return results;
+    }
+
+    private static String findFirstEncyclopedicParagraph(String text, String title) {
         String[] lines = text.split("\n");
         for (String l : lines) {
             String t = l.trim();
-            if (t.length() > 60 && !t.contains("disambiguation") && !t.startsWith("Jump to") && !t.startsWith("Main menu")) {
+            // Match genuine full prose paragraphs
+            if (t.length() > 80 && !t.contains("disambiguation") && !t.startsWith("Jump to") && !t.startsWith("Main menu")
+                    && !t.startsWith("Toggle ") && !t.startsWith("For other uses") && !t.startsWith("For the ")
+                    && !t.startsWith("{{") && !t.startsWith("Coordinates") && !t.startsWith("Page semi-protected")) {
+                return t;
+            }
+        }
+        // Fallback to title line or first substantial line
+        for (String l : lines) {
+            String t = l.trim();
+            if (t.length() > 50 && !t.startsWith("Toggle ") && !t.startsWith("Jump to") && !t.startsWith("Main menu")) {
                 return t;
             }
         }
