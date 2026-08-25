@@ -12,7 +12,7 @@
 
 FastWebScrape is the data-extraction substrate of the **FastJava** web stack. It provides highly-optimized native algorithms to strip formatting blocks, find hyperlinks, extract structured tags, and parse JSON-LD schemas in microseconds—bypassing the latency, memory allocations, and heap pressure of traditional heavy DOM parsers.
 
-[![FastWebScrape Showcase](docs/screenshot.png)](https://youtu.be/PlLANMEbWPk)
+[![FastWebScrape Showcase](docs/screenshot.png)](https://www.youtube.com/watch?v=47UWxPmsZe4)
 
 ---
 

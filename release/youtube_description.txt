@@ -20,7 +20,7 @@ https://github.com/andrestubbe/FastRegex
 https://github.com/andrestubbe/FastANSI
 https://github.com/andrestubbe/FastCore
 
-OUR PHILOSOPHY:
+PHILOSOPHY:
 No copies. Ever. Critical paths. Native-First performance.
 If you're interested in pushing the JVM to its absolute limits, subscribe for more.
 
