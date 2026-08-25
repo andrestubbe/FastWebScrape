@@ -126,17 +126,15 @@ Download the latest JARs directly to add them to your classpath:
 ## Technical Examples & Hero Demos
 Explore the complete source configurations and benchmarks:
 
-* **⚡ Interactive Demo**: [Demo.java](src/main/java/fastscrape/Demo.java) (crawls, cleans, and structures an ANSI color report).
-* **⚡ Joint Pipeline Demo**: [PipelineDemo.java](https://github.com/andrestubbe/FastSpider/tree/main/examples/PipelineDemo) (orchestrates FastSpider and FastScrape in unison: fetches asynchronously via WinHTTP and parses HTML via AVX2 in a zero-copy pipeline).
-* **📈 Performance Benchmark**: [Benchmark.java](src/main/java/fastscrape/Benchmark.java) (races FastScrape against Java's standard compiler regex engines).
-* **🧪 Test Suite**: [FastScrapeTest.java](src/test/java/fastscrape/FastScrapeTest.java) (comprehensive JUnit 5 validation).
+* **⚡ Interactive Live Stream Demo**: [Demo.java](src/main/java/fastscrape/Demo.java) (`.\run-demo.bat`) — Multi-article live concurrent ingestion and zero-allocation AVX2 text extraction stream.
+* **📈 Multi-Tier Comparison**: [Benchmark.java](src/main/java/fastscrape/Benchmark.java) (`.\run-compare.bat`) — Races FastScrape against standard JDK RegEx across 3 tiers (CleanText, Links, Tags).
+* **🚀 OpenJDK JMH Benchmark**: [FastScrapeJmhBenchmark.java](examples/Benchmark/src/main/java/fastscrape/benchmark/FastScrapeJmhBenchmark.java) (`.\run-benchmark.bat`) — Formal JMH microbenchmarks measuring ops/ms throughput.
+* **🧪 Test Suite**: [FastScrapeTest.java](src/test/java/fastscrape/FastScrapeTest.java) — Comprehensive JUnit 5 validation.
 
 Run the hero demo locally from the command line:
 ```bash
-mvn exec:java "-Dexec.mainClass=fastscrape.Demo"
+.\run-demo.bat
 ```
-
-For combined crawler & parser pipeline instructions, see the [FastSpider Pipeline Demo](https://github.com/andrestubbe/FastSpider#technical-examples--hero-demos).
 
 ---
 
