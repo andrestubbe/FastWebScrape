@@ -1,4 +1,4 @@
-﻿# FastScrape — High-performance native HTML/XML extractor for Java
+# FastScrape — High-performance native HTML/XML extractor for Java
 
 **High-performance SIMD/AVX2-powered HTML and XML data-mining engine for the JVM.**
 
@@ -13,7 +13,7 @@ FastScrape scraper = FastScrape.open();
 String cleanText = scraper.extractReadableText(rawHtml);
 ```
 
-[![Status](https://img.shields.io/badge/status-0.1.0-brightgreen.svg)](https://github.com/andrestubbe/FastScrape/releases/tag/0.1.0)
+[![Status](https://img.shields.io/badge/status-0.1.1-brightgreen.svg)](https://github.com/andrestubbe/FastScrape/releases/tag/0.1.1)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Java](https://img.shields.io/badge/Java-17+-blue.svg)](https://www.java.com)
 [![Platform](https://img.shields.io/badge/Platform-Windows%2010+-lightgrey.svg)]()
