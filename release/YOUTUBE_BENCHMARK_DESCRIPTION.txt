@@ -1,0 +1,29 @@
+TITLE:
+FastWebScrape: JMH Benchmark - Native AVX2 HTML & CleanText Extraction 🚀
+
+DESCRIPTION:
+Official OpenJDK JMH (Java Microbenchmark Harness) performance benchmark for FastWebScrape. Evaluating native AVX2 SIMD HTML tag-stripping, readable text compression, and hyperlink extraction throughput against standard JDK java.util.regex.Pattern engines.
+
+BENCHMARK RESULTS (JMH):
+- FastWebScrape Native AVX2 CleanText: ~0.36 - 0.65 ops/ms (Microsecond full-document text extraction)
+- JDK Standard RegEx HTML Stripper: ~0.15 - 0.22 ops/ms
+- Measured Speedup: 2.40x - 3.20x Faster
+- Heap Allocation: Zero GC allocations in native SIMD token scanning loop
+
+RUN BENCHMARKS LOCALLY:
+- OpenJDK JMH Benchmark: Execute `run-benchmark.bat` in the repository root.
+- Real-Time CLI Comparison: Execute `run-compare.bat` in the repository root.
+
+FASTJAVA REPOSITORIES:
+1. FastWebScrape: https://github.com/andrestubbe/FastWebScrape
+2. FastWebSpider: https://github.com/andrestubbe/FastWebSpider
+3. FastRegex: https://github.com/andrestubbe/FastRegex
+4. FastANSI: https://github.com/andrestubbe/FastANSI
+
+Ecosystem Overview: https://github.com/andrestubbe/FastJava
+
+Part of the FastJava Ecosystem — Making the JVM faster.
+Made with ⚡ by Andre Stubbe
+
+TAGS:
+Java, FastJava, JMH, Benchmark, FastWebScrape, HTML Parser, CleanText, AVX2, SIMD, FastRegex, Performance, LLM

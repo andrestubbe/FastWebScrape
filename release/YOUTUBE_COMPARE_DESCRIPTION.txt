@@ -1,0 +1,31 @@
+TITLE:
+FastWebScrape: Head-to-Head CLI Benchmark Comparison vs Standard JDK HTML Parsers (AVX2 & RegEx) 🚀
+
+DESCRIPTION:
+Comprehensive multi-tier CLI performance benchmark comparing FastWebScrape against standard Java HTML & Regex parsers.
+
+Watch the real-time speedup evaluation across three rigorous benchmark tiers:
+1. Tier 1 (CleanText Tag Stripper): Native AVX2 zero-allocation token scanning vs JDK Pattern.matcher() across 100 iterations on heavy live Wikipedia HTML documents (2.4x Faster).
+2. Tier 2 (Hyperlink Extraction): Microsecond link harvesting vs JDK RegEx href matching across 300 iterations (2.2x Faster).
+3. Tier 3 (Element & Tag Isolation): Specific HTML tag targeting (<H1>, <TITLE>) extraction vs JDK Pattern regex across 500 iterations (2.0x+ Faster).
+
+BENCHMARK HIGHLIGHTS:
+- Direct 3-Tier Head-to-Head Speedups across all scraping tasks
+- Zero GC Overhead: Eliminates millions of temporary Matcher, DOM tree, and String allocations
+- Live Real-Time Verdict: Detailed throughput (ops/ms), latency (ms/µs), and GB/s SIMD throughput across 120 columns
+
+RUN LOCALLY:
+Execute `run-compare.bat` in the repository root.
+
+GITHUB REPOSITORIES:
+1. FastWebScrape: https://github.com/andrestubbe/FastWebScrape
+2. FastWebSpider: https://github.com/andrestubbe/FastWebSpider
+3. FastRegex: https://github.com/andrestubbe/FastRegex
+4. FastANSI: https://github.com/andrestubbe/FastANSI
+
+OUR PHILOSOPHY:
+No copies. Ever. Critical paths. Native-First performance.
+If you're interested in pushing the JVM to its absolute limits, subscribe for more.
+
+TAGS:
+Java, FastJava, FastWebScrape, Benchmark, Comparison, HTML Parser, CleanText, AVX2, SIMD, FastRegex, Performance, LLM
