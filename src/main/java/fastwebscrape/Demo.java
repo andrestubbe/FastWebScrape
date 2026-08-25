@@ -113,7 +113,12 @@ public class Demo {
             String cleanH1 = rawH1.isEmpty() ? extractPageTitleFromUrl(url) : scraper.extractReadableText(rawH1.getBytes(StandardCharsets.UTF_8)).trim();
             if (cleanH1.isEmpty()) cleanH1 = extractPageTitleFromUrl(url);
 
-            System.out.printf("  ├── %s %-48s %s %s %s %s\n",
+            boolean isLastNode = (i == TARGET_PAGES.size() - 1);
+            String nodeBranch = isLastNode ? "└──" : "├──";
+            String subIndent = isLastNode ? "     " : "  │  ";
+
+            System.out.printf("  %s %s %-48s %s %s %s %s\n",
+                    darkGray(nodeBranch),
                     boldWhite(String.format("[%02d]", i + 1)),
                     white(shortUrl),
                     darkGray(String.format("| %,6d KB HTML", html.length / 1024)),
@@ -122,19 +127,19 @@ public class Demo {
                     darkGray(String.format("| -%.1f%% noise", reductionPct)));
 
             // 1. Title line
-            System.out.printf("  │    ├── %s %s\n", darkGray("Title:   "), boldWhite(truncate(cleanH1, 70)));
+            System.out.printf("%s  ├── %s %s\n", subIndent, darkGray("Title:   "), boldWhite(truncate(cleanH1, 70)));
 
             // 2. Sub-headings (H2) overview
             List<String> cleanH2List = sanitizeHeadings(scraper, rawH2s);
             if (!cleanH2List.isEmpty()) {
                 String h2Joined = String.join(" • ", cleanH2List.subList(0, Math.min(cleanH2List.size(), 4)));
-                System.out.printf("  │    ├── %s %s\n", darkGray("Sections:"), darkGray(truncate(h2Joined, 85)));
+                System.out.printf("%s  ├── %s %s\n", subIndent, darkGray("Sections:"), darkGray(truncate(h2Joined, 85)));
             }
 
             // 3. Extract genuine encyclopedic paragraph for LLM
             String summarySnippet = findFirstEncyclopedicParagraph(cleanText, cleanH1);
             if (!summarySnippet.isEmpty()) {
-                System.out.printf("  │    ├── %s %s\n", darkGray("Synopsis:"), white(truncate(summarySnippet, 95)));
+                System.out.printf("%s  ├── %s %s\n", subIndent, darkGray("Synopsis:"), white(truncate(summarySnippet, 95)));
             }
 
             // 4. Stream 3 clean article links
@@ -142,7 +147,8 @@ public class Demo {
             for (int p = 0; p < previewCount; p++) {
                 boolean isLast = (p == previewCount - 1);
                 String lk = truncate(validLinks.get(p), 65);
-                System.out.printf("  │    %s %s %s\n",
+                System.out.printf("%s  %s %s %s\n",
+                        subIndent,
                         darkGray(isLast ? "└──" : "├──"),
                         darkGray(String.format("[LINK %02d]", p + 1)),
                         darkGray(lk));
@@ -167,8 +173,7 @@ public class Demo {
                         boldWhite(String.format("◆ [%s]", nodeTitle)),
                         darkGray("—"),
                         darkGray(String.format("~%d prompt tokens", estTokens)));
-                System.out.printf("  │  %s\n", white(truncate(bodyPara, 114)));
-                System.out.println("  │");
+                System.out.printf("  └── %s\n\n", white(truncate(bodyPara, 114)));
             }
         }
 
