@@ -1,4 +1,4 @@
-package fastscrape;
+package fastwebscrape;
 
 import fastansi.FastANSI;
 import fastregex.FastRegex;
@@ -15,7 +15,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Multi-Tier Head-to-Head Comparative Benchmark Suite for FastScrape vs Standard Java HTML/Regex Parsers.
+ * Multi-Tier Head-to-Head Comparative Benchmark Suite for FastWebScrape vs Standard Java HTML/Regex Parsers.
  */
 public class Benchmark {
 
@@ -26,11 +26,11 @@ public class Benchmark {
 
     public static void main(String[] args) throws Exception {
         System.out.println(darkGray("========================================================================================================================"));
-        System.out.println(" " + boldWhite("FastScrape & FastJava") + darkGray(" — Comprehensive Multi-Tier 120-Column Benchmark Suite"));
+        System.out.println(" " + boldWhite("FastWebScrape & FastJava") + darkGray(" — Comprehensive Multi-Tier 120-Column Benchmark Suite"));
         System.out.println(darkGray("========================================================================================================================"));
         System.out.println();
 
-        FastScrape scraper = FastScrape.open();
+        FastWebScrape scraper = FastWebScrape.open();
 
         // Download live Wikipedia document
         System.out.println(darkGray("[Ingestion]") + " " + boldWhite("Live Benchmark Document Download") + darkGray(" (Wikipedia: Java Programming Language)"));
@@ -39,7 +39,7 @@ public class Benchmark {
         HttpClient http = HttpClient.newHttpClient();
         HttpRequest req = HttpRequest.newBuilder()
                 .uri(URI.create("https://en.wikipedia.org/wiki/Java_(programming_language)"))
-                .header("User-Agent", "FastScrape-Benchmark/0.1.1 (Java 17+; AVX2)")
+                .header("User-Agent", "FastWebScrape-Benchmark/0.1.1 (Java 17+; AVX2)")
                 .build();
         byte[] htmlBytes = http.send(req, HttpResponse.BodyHandlers.ofByteArray()).body();
         String htmlText = new String(htmlBytes, StandardCharsets.UTF_8);
@@ -60,7 +60,7 @@ public class Benchmark {
         double jdkStripOpsPerMs = 100.0 / (jdkStripNanos / 1_000_000.0);
         double jdkStripAvgMs = (jdkStripNanos / 1_000_000.0) / 100.0;
 
-        // FastScrape Native AVX2 Clean Text Stripper
+        // FastWebScrape Native AVX2 Clean Text Stripper
         for (int i = 0; i < 30; i++) scraper.extractReadableText(htmlBytes);
         long fastStripT0 = System.nanoTime();
         String cleanSample = "";
@@ -78,7 +78,7 @@ public class Benchmark {
         System.out.printf(" %-48s | %-22s | %-20s | %-20s\n", "HTML Stripper Engine", "Throughput (ops/ms)", "Avg Latency (ms)", "Speedup");
         System.out.println(darkGray("------------------------------------------------------------------------------------------------------------------------"));
         System.out.printf(" %-48s | %22.2f | %17.3f ms | %s\n", "Standard JDK RegEx HTML Parser", jdkStripOpsPerMs, jdkStripAvgMs, darkGray("1.00x Base          "));
-        System.out.printf(" %-48s | %22.2f | %17.3f ms | %s\n", "FastScrape AVX2 CleanText Stripper", fastStripOpsPerMs, fastStripAvgMs, boldWhite(String.format("%.2fx Faster         ", stripSpeedup)));
+        System.out.printf(" %-48s | %22.2f | %17.3f ms | %s\n", "FastWebScrape AVX2 CleanText Stripper", fastStripOpsPerMs, fastStripAvgMs, boldWhite(String.format("%.2fx Faster         ", stripSpeedup)));
         System.out.println(darkGray("------------------------------------------------------------------------------------------------------------------------"));
         System.out.printf(darkGray(" Processed 100 full payloads extracting ") + boldWhite(String.format("%,d characters", cleanSample.length())) + darkGray(" of clean text.\n\n"));
 
@@ -98,7 +98,7 @@ public class Benchmark {
         double jdkOpsPerMs = 300.0 / (jdkNanos / 1_000_000.0);
         double jdkAvgMs = (jdkNanos / 1_000_000.0) / 300.0;
 
-        // FastScrape Native AVX2
+        // FastWebScrape Native AVX2
         for (int i = 0; i < 50; i++) scraper.extractLinks(htmlBytes);
         long t1 = System.nanoTime();
         int totalFastLinks = 0;
@@ -116,7 +116,7 @@ public class Benchmark {
         System.out.printf(" %-48s | %-22s | %-20s | %-20s\n", "Extraction Engine", "Throughput (ops/ms)", "Avg Latency (ms)", "Speedup");
         System.out.println(darkGray("------------------------------------------------------------------------------------------------------------------------"));
         System.out.printf(" %-48s | %22.2f | %17.3f ms | %s\n", "Standard JDK Pattern.matcher(\"href=...\")", jdkOpsPerMs, jdkAvgMs, darkGray("1.00x Base          "));
-        System.out.printf(" %-48s | %22.2f | %17.3f ms | %s\n", "FastScrape Native AVX2 Link Scanner", fastOpsPerMs, fastAvgMs, boldWhite(String.format("%.2fx Faster         ", extractSpeedup)));
+        System.out.printf(" %-48s | %22.2f | %17.3f ms | %s\n", "FastWebScrape Native AVX2 Link Scanner", fastOpsPerMs, fastAvgMs, boldWhite(String.format("%.2fx Faster         ", extractSpeedup)));
         System.out.println(darkGray("------------------------------------------------------------------------------------------------------------------------"));
         System.out.printf(darkGray(" Extracted ") + boldWhite(String.format("%,d links", totalFastLinks / 300)) + darkGray(" per iteration across 300 iterations.\n\n"));
 
@@ -135,7 +135,7 @@ public class Benchmark {
         double jdkTagOpsPerMs = 500.0 / (jdkTagNanos / 1_000_000.0);
         double jdkTagAvgUs = (jdkTagNanos / 1_000.0) / 500.0;
 
-        // FastScrape extractByTag
+        // FastWebScrape extractByTag
         for (int i = 0; i < 50; i++) scraper.extractByTag(htmlBytes, "h1");
         long fastTagT0 = System.nanoTime();
         for (int i = 0; i < 500; i++) {
@@ -152,7 +152,7 @@ public class Benchmark {
         System.out.printf(" %-48s | %-22s | %-20s | %-20s\n", "Tag Extraction Engine", "Throughput (ops/ms)", "Avg Latency (µs)", "Speedup");
         System.out.println(darkGray("------------------------------------------------------------------------------------------------------------------------"));
         System.out.printf(" %-48s | %22.2f | %17.1f µs | %s\n", "Standard JDK RegEx <H1> Extractor", jdkTagOpsPerMs, jdkTagAvgUs, darkGray("1.00x Base          "));
-        System.out.printf(" %-48s | %22.2f | %17.1f µs | %s\n", "FastScrape AVX2 extractByTag(\"h1\")", fastTagOpsPerMs, fastTagAvgUs, boldWhite(String.format("%.2fx Faster         ", tagSpeedup)));
+        System.out.printf(" %-48s | %22.2f | %17.1f µs | %s\n", "FastWebScrape AVX2 extractByTag(\"h1\")", fastTagOpsPerMs, fastTagAvgUs, boldWhite(String.format("%.2fx Faster         ", tagSpeedup)));
         System.out.println(darkGray("------------------------------------------------------------------------------------------------------------------------"));
         System.out.printf(darkGray(" Isolated element targets across 500 iterations in ") + boldWhite(String.format("%.1f ms", fastTagNanos / 1_000_000.0)) + darkGray(" total.\n\n"));
 
@@ -160,7 +160,7 @@ public class Benchmark {
         // Summary Card
         // ─────────────────────────────────────────────────────────────────────
         System.out.println(darkGray("========================================================================================================================"));
-        System.out.printf(" " + boldWhite("BENCHMARK VERDICT:") + darkGray(" FastScrape outperforms standard JDK parsers (") + boldWhite(String.format("CleanText: %.2fx", stripSpeedup)) + darkGray(" | ") + boldWhite(String.format("Link Ext: %.2fx", extractSpeedup)) + darkGray(" | ") + boldWhite(String.format("Tag Ext: %.2fx", tagSpeedup)) + darkGray(").\n"));
+        System.out.printf(" " + boldWhite("BENCHMARK VERDICT:") + darkGray(" FastWebScrape outperforms standard JDK parsers (") + boldWhite(String.format("CleanText: %.2fx", stripSpeedup)) + darkGray(" | ") + boldWhite(String.format("Link Ext: %.2fx", extractSpeedup)) + darkGray(" | ") + boldWhite(String.format("Tag Ext: %.2fx", tagSpeedup)) + darkGray(").\n"));
         System.out.println(darkGray("========================================================================================================================"));
     }
 

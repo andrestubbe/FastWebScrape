@@ -1,7 +1,7 @@
-package fastscrape;
+package fastwebscrape;
 
 import fastansi.FastANSI;
-import fastspider.FastSpider;
+import fastwebspider.FastWebSpider;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -10,8 +10,8 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 /**
- * FastScrape — High-Speed Native AVX2 HTML Scraping & CleanText Hero Demo.
- * Powered by FastSpider (Native WinHTTP Session) for multi-node web ingestion and AVX2 for zero-copy text mining.
+ * FastWebScrape — High-Speed Native AVX2 HTML Scraping & CleanText Hero Demo.
+ * Powered by FastWebSpider (Native WinHTTP Session) for multi-node web ingestion and AVX2 for zero-copy text mining.
  */
 public class Demo {
 
@@ -42,19 +42,19 @@ public class Demo {
 
     public static void main(String[] args) throws Exception {
         System.out.println(darkGray("========================================================================================================================"));
-        System.out.println(" " + boldWhite("FastScrape") + darkGray(" — Real-Time Native AVX2 HTML Scraping & CleanText Pipeline"));
-        System.out.println(darkGray(" INGESTION: FastSpider WinHTTP Native Session  |  PARSER: AVX2 Zero-Copy Tag Stripper & Link Harvester"));
+        System.out.println(" " + boldWhite("FastWebScrape") + darkGray(" — Real-Time Native AVX2 HTML Scraping & CleanText Pipeline"));
+        System.out.println(darkGray(" INGESTION: FastWebSpider WinHTTP Native Session  |  PARSER: AVX2 Zero-Copy Tag Stripper & Link Harvester"));
         System.out.println(darkGray("========================================================================================================================"));
         System.out.println();
 
-        FastScrape scraper = FastScrape.open();
-        FastSpider spider = FastSpider.open();
+        FastWebScrape scraper = FastWebScrape.open();
+        FastWebSpider spider = FastWebSpider.open();
 
         // ── Phase 1: High-Speed WinHTTP Multi-Node Ingestion ─────────────────
-        System.out.println(darkGray("[Phase 1]") + " " + boldWhite("FastSpider Native WinHTTP Ingestion") + darkGray(" (Downloading 20 heavy Wikipedia nodes)"));
+        System.out.println(darkGray("[Phase 1]") + " " + boldWhite("FastWebSpider Native WinHTTP Ingestion") + darkGray(" (Downloading 20 heavy Wikipedia nodes)"));
 
         long fetchT0 = System.currentTimeMillis();
-        List<CompletableFuture<FastSpider.SpiderResponse>> futures = new ArrayList<>();
+        List<CompletableFuture<FastWebSpider.SpiderResponse>> futures = new ArrayList<>();
         for (String url : TARGET_PAGES) {
             futures.add(spider.fetchAsync(url));
         }
@@ -63,7 +63,7 @@ public class Demo {
 
         List<byte[]> payloads = new ArrayList<>();
         long totalRawBytes = 0;
-        for (CompletableFuture<FastSpider.SpiderResponse> f : futures) {
+        for (CompletableFuture<FastWebSpider.SpiderResponse> f : futures) {
             byte[] body = f.join().rawBody();
             payloads.add(body);
             totalRawBytes += body.length;
@@ -188,7 +188,7 @@ public class Demo {
         System.out.println(darkGray("========================================================================================================================"));
     }
 
-    private static List<String> sanitizeHeadings(FastScrape scraper, List<String> rawH2s) {
+    private static List<String> sanitizeHeadings(FastWebScrape scraper, List<String> rawH2s) {
         List<String> results = new ArrayList<>();
         for (String raw : rawH2s) {
             String clean = scraper.extractReadableText(raw.getBytes(StandardCharsets.UTF_8)).trim();

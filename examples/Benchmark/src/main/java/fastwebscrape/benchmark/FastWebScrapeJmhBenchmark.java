@@ -1,6 +1,6 @@
-package fastscrape.benchmark;
+package fastwebscrape.benchmark;
 
-import fastscrape.FastScrape;
+import fastwebscrape.FastWebScrape;
 import org.openjdk.jmh.annotations.*;
 
 import java.net.URI;
@@ -14,7 +14,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Standard JMH Benchmark Suite for FastScrape Native AVX2 HTML Parsers vs JDK RegEx.
+ * Standard JMH Benchmark Suite for FastWebScrape Native AVX2 HTML Parsers vs JDK RegEx.
  */
 @BenchmarkMode(Mode.Throughput)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
@@ -22,23 +22,23 @@ import java.util.regex.Pattern;
 @Warmup(iterations = 2, time = 1)
 @Measurement(iterations = 3, time = 1)
 @Fork(1)
-public class FastScrapeJmhBenchmark {
+public class FastWebScrapeJmhBenchmark {
 
     private static final Pattern HREF_PATTERN = Pattern.compile("href=\"([^\"]+)\"");
     private static final Pattern TAG_PATTERN = Pattern.compile("<[^>]+>");
 
-    private FastScrape scraper;
+    private FastWebScrape scraper;
     private byte[] sampleHtmlBytes;
     private String sampleHtmlText;
 
     @Setup
     public void setup() {
-        scraper = FastScrape.open();
+        scraper = FastWebScrape.open();
         try {
             HttpClient http = HttpClient.newHttpClient();
             HttpRequest req = HttpRequest.newBuilder()
                     .uri(URI.create("https://en.wikipedia.org/wiki/Java_(programming_language)"))
-                    .header("User-Agent", "FastScrape-JMH/0.1.1")
+                    .header("User-Agent", "FastWebScrape-JMH/0.1.1")
                     .build();
             sampleHtmlBytes = http.send(req, HttpResponse.BodyHandlers.ofByteArray()).body();
         } catch (Exception e) {
@@ -53,7 +53,7 @@ public class FastScrapeJmhBenchmark {
     }
 
     @Benchmark
-    public String benchmarkFastScrapeCleanText() {
+    public String benchmarkFastWebScrapeCleanText() {
         return scraper.extractReadableText(sampleHtmlBytes);
     }
 
@@ -68,7 +68,7 @@ public class FastScrapeJmhBenchmark {
     }
 
     @Benchmark
-    public int benchmarkFastScrapeLinkExtraction() {
+    public int benchmarkFastWebScrapeLinkExtraction() {
         List<String> links = scraper.extractLinks(sampleHtmlBytes);
         return links.size();
     }

@@ -1,4 +1,4 @@
-#include "fastscrape.h"
+#include "fastwebscrape.h"
 #include <windows.h>
 #include <stdio.h>
 #include <string>
@@ -596,7 +596,7 @@ std::string extractJsonLDCpp(const uint8_t* data, size_t length) {
 
 extern "C" {
 
-JNIEXPORT jstring JNICALL Java_fastscrape_FastScrapeImpl_nativeExtractReadableText(
+JNIEXPORT jstring JNICALL Java_fastwebscrape_FastWebScrapeImpl_nativeExtractReadableText(
     JNIEnv* env, jobject obj, jbyteArray htmlData) {
     
     if (htmlData == nullptr) return env->NewStringUTF("");
@@ -612,7 +612,7 @@ JNIEXPORT jstring JNICALL Java_fastscrape_FastScrapeImpl_nativeExtractReadableTe
     return env->NewStringUTF(text.c_str());
 }
 
-JNIEXPORT jobjectArray JNICALL Java_fastscrape_FastScrapeImpl_nativeExtractLinks(
+JNIEXPORT jobjectArray JNICALL Java_fastwebscrape_FastWebScrapeImpl_nativeExtractLinks(
     JNIEnv* env, jobject obj, jbyteArray htmlData) {
     
     jclass stringClazz = env->FindClass("java/lang/String");
@@ -637,7 +637,7 @@ JNIEXPORT jobjectArray JNICALL Java_fastscrape_FastScrapeImpl_nativeExtractLinks
     return array;
 }
 
-JNIEXPORT jobjectArray JNICALL Java_fastscrape_FastScrapeImpl_nativeExtractByTag(
+JNIEXPORT jobjectArray JNICALL Java_fastwebscrape_FastWebScrapeImpl_nativeExtractByTag(
     JNIEnv* env, jobject obj, jbyteArray htmlData, jstring tagName) {
     
     jclass stringClazz = env->FindClass("java/lang/String");
@@ -666,7 +666,7 @@ JNIEXPORT jobjectArray JNICALL Java_fastscrape_FastScrapeImpl_nativeExtractByTag
     return array;
 }
 
-JNIEXPORT jstring JNICALL Java_fastscrape_FastScrapeImpl_nativeExtractJsonLD(
+JNIEXPORT jstring JNICALL Java_fastwebscrape_FastWebScrapeImpl_nativeExtractJsonLD(
     JNIEnv* env, jobject obj, jbyteArray htmlData) {
     
     if (htmlData == nullptr) return env->NewStringUTF("");

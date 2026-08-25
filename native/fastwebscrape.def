@@ -1,0 +1,6 @@
+LIBRARY fastwebscrape
+EXPORTS
+    Java_fastwebscrape_FastWebScrapeImpl_nativeExtractReadableText
+    Java_fastwebscrape_FastWebScrapeImpl_nativeExtractLinks
+    Java_fastwebscrape_FastWebScrapeImpl_nativeExtractByTag
+    Java_fastwebscrape_FastWebScrapeImpl_nativeExtractJsonLD

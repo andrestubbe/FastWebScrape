@@ -1,23 +1,23 @@
-package fastscrape;
+package fastwebscrape;
 
 import java.util.List;
 
 /**
-2:  * FastScrape — High-performance native HTML/XML extractor.
+2:  * FastWebScrape — High-performance native HTML/XML extractor.
 3:  * 
 4:  * Employs SIMD/AVX2 scanning at the native JNI layer to strip HTML/XML tags,
 5:  * extract hyper-links, find elements by tags, and isolate JSON-LD blocks
 6:  * in microseconds without garbage-collection or DOM tree overhead.
 7:  */
-public interface FastScrape {
+public interface FastWebScrape {
 
     /**
-     * Opens a new FastScrape instance.
+     * Opens a new FastWebScrape instance.
      * 
-     * @return a thread-safe FastScrape implementation
+     * @return a thread-safe FastWebScrape implementation
      */
-    static FastScrape open() {
-        return new FastScrapeImpl();
+    static FastWebScrape open() {
+        return new FastWebScrapeImpl();
     }
 
     /**

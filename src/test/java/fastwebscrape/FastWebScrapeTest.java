@@ -1,4 +1,4 @@
-package fastscrape;
+package fastwebscrape;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -6,13 +6,13 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class FastScrapeTest {
+public class FastWebScrapeTest {
 
-    private static FastScrape scraper;
+    private static FastWebScrape scraper;
 
     @BeforeAll
     public static void setup() {
-        scraper = FastScrape.open();
+        scraper = FastWebScrape.open();
     }
 
     @Test
@@ -58,12 +58,12 @@ public class FastScrapeTest {
 
     @Test
     public void testExtractJsonLD() {
-        String html = "<html><head><script type=\"application/ld+json\">{\"name\":\"FastScrape\"}</script></head></html>";
+        String html = "<html><head><script type=\"application/ld+json\">{\"name\":\"FastWebScrape\"}</script></head></html>";
         byte[] bytes = html.getBytes(StandardCharsets.UTF_8);
 
         String json = scraper.extractJsonLD(bytes);
         assertNotNull(json);
-        assertTrue(json.contains("{\"name\":\"FastScrape\"}"));
+        assertTrue(json.contains("{\"name\":\"FastWebScrape\"}"));
     }
 
     @Test

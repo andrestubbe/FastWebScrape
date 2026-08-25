@@ -1,6 +1,0 @@
-LIBRARY fastscrape
-EXPORTS
-    Java_fastscrape_FastScrapeImpl_nativeExtractReadableText
-    Java_fastscrape_FastScrapeImpl_nativeExtractLinks
-    Java_fastscrape_FastScrapeImpl_nativeExtractByTag
-    Java_fastscrape_FastScrapeImpl_nativeExtractJsonLD

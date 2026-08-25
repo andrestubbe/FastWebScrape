@@ -1,4 +1,4 @@
-package fastscrape;
+package fastwebscrape;
 
 import fastcore.FastCore;
 import java.util.ArrayList;
@@ -6,13 +6,13 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * Implementation of FastScrape interface using native AVX2 logic.
+ * Implementation of FastWebScrape interface using native AVX2 logic.
  */
-class FastScrapeImpl implements FastScrape {
+class FastWebScrapeImpl implements FastWebScrape {
 
     static {
         // Load the JNI library using FastCore Unified Loader
-        FastCore.loadLibrary("fastscrape");
+        FastCore.loadLibrary("FastWebScrape");
     }
 
     // Native JNI methods

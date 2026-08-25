@@ -6,13 +6,13 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.github.andrestubbe</groupId>
-    <artifactId>FastScrape</artifactId>
-    <version>0.1.1</version>
+    <artifactId>FastWebScrape</artifactId>
+    <version>0.1.2</version>
     <packaging>jar</packaging>
 
-    <name>FastScrape</name>
-    <description>Native Windows XXX API for Java</description>
-    <url>https://github.com/andrestubbe/FastScrape</url>
+    <name>FastWebScrape</name>
+    <description>Native Windows AVX2 HTML/XML Extractor for Java</description>
+    <url>https://github.com/andrestubbe/FastWebScrape</url>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
@@ -68,10 +68,10 @@
             <artifactId>FastANSI</artifactId>
             <version>0.1.3</version>
         </dependency>
-        <!-- FastSpider -->
+        <!-- FastWebSpider -->
         <dependency>
             <groupId>com.github.andrestubbe</groupId>
-            <artifactId>FastSpider</artifactId>
+            <artifactId>FastWebSpider</artifactId>
             <version>0.1.2</version>
         </dependency>
         <dependency>
@@ -156,6 +156,10 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>3.5.0</version>
+                <configuration>
+                    <doclint>none</doclint>
+                    <failOnError>false</failOnError>
+                </configuration>
                 <executions>
                     <execution>
                         <id>attach-javadocs</id>
