@@ -1,17 +1,4 @@
-# FastScrape — High-performance native HTML/XML extractor for Java
-
-**High-performance SIMD/AVX2-powered HTML and XML data-mining engine for the JVM.**
-
-FastScrape is the data-extraction substrate of the **FastJava** web stack. It provides highly-optimized native algorithms to strip formatting blocks, find hyperlinks, extract structured tags, and parse JSON-LD schemas in microseconds—bypassing the latency, memory allocations, and heap pressure of traditional heavy DOM parsers.
-
-```java
-// Quick Start — Microsecond Text Scraping
-byte[] rawHtml = ...; // 5MB HTML buffer downloaded from web
-FastScrape scraper = FastScrape.open();
-
-// Strips CSS/JS, normalizes spacing, and reformats block-level tags in under 5ms
-String cleanText = scraper.extractReadableText(rawHtml);
-```
+# FastScrape — High-Performance Native HTML/XML Extractor for Java
 
 [![Status](https://img.shields.io/badge/status-0.1.1-brightgreen.svg)](https://github.com/andrestubbe/FastScrape/releases/tag/0.1.1)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -19,7 +6,15 @@ String cleanText = scraper.extractReadableText(rawHtml);
 [![Platform](https://img.shields.io/badge/Platform-Windows%2010+-lightgrey.svg)]()
 [![JitPack](https://img.shields.io/badge/JitPack-ready-green.svg)](https://jitpack.io/#andrestubbe/FastScrape)
 
+---
+
+**High-performance SIMD/AVX2-powered HTML and XML data-mining engine for the JVM.**
+
+FastScrape is the data-extraction substrate of the **FastJava** web stack. It provides highly-optimized native algorithms to strip formatting blocks, find hyperlinks, extract structured tags, and parse JSON-LD schemas in microseconds—bypassing the latency, memory allocations, and heap pressure of traditional heavy DOM parsers.
+
 [![FastScrape Showcase](docs/screenshot.png)](https://youtu.be/PlLANMEbWPk)
+
+---
 
 
 ## Table of Contents
