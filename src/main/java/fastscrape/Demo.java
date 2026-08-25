@@ -1,20 +1,17 @@
 package fastscrape;
 
 import fastansi.FastANSI;
+import fastspider.FastSpider;
 
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executors;
 
 /**
- * FastScrape — High-Speed Native AVX2 HTML Scraping & Text Extraction Hero Demo.
- * Demonstrates real-time SIMD tag stripping, link harvesting, and JSON-LD/Metadata parsing across live architecture nodes.
+ * FastScrape — High-Speed Native AVX2 HTML Scraping & CleanText Hero Demo.
+ * Powered by FastSpider (Native WinHTTP Session) for multi-node web ingestion and AVX2 for zero-copy text mining.
  */
 public class Demo {
 
@@ -30,53 +27,60 @@ public class Demo {
         "https://en.wikipedia.org/wiki/Graphics_processing_unit",
         "https://en.wikipedia.org/wiki/General-purpose_computing_on_graphics_processing_units",
         "https://en.wikipedia.org/wiki/CUDA",
-        "https://en.wikipedia.org/wiki/OpenCL"
+        "https://en.wikipedia.org/wiki/OpenCL",
+        "https://en.wikipedia.org/wiki/Java_(programming_language)",
+        "https://en.wikipedia.org/wiki/C%2B%2B",
+        "https://en.wikipedia.org/wiki/Rust_(programming_language)",
+        "https://en.wikipedia.org/wiki/Go_(programming_language)",
+        "https://en.wikipedia.org/wiki/Julia_(programming_language)",
+        "https://en.wikipedia.org/wiki/Fortran",
+        "https://en.wikipedia.org/wiki/Assembly_language",
+        "https://en.wikipedia.org/wiki/Compiler",
+        "https://en.wikipedia.org/wiki/Just-in-time_compilation",
+        "https://en.wikipedia.org/wiki/Parallel_computing"
     );
 
     public static void main(String[] args) throws Exception {
         System.out.println(darkGray("========================================================================================================================"));
-        System.out.println(" " + boldWhite("FastScrape") + darkGray(" — Real-Time Native AVX2 HTML Scraping & CleanText Engine"));
-        System.out.println(darkGray(" MISSION: Extract readable text, hyperlinks, headings, and JSON-LD from live HTML payloads in microsecond bursts"));
+        System.out.println(" " + boldWhite("FastScrape") + darkGray(" — Real-Time Native AVX2 HTML Scraping & CleanText Pipeline"));
+        System.out.println(darkGray(" INGESTION: FastSpider WinHTTP Native Session  |  PARSER: AVX2 Zero-Copy Tag Stripper & Link Harvester"));
         System.out.println(darkGray("========================================================================================================================"));
         System.out.println();
 
         FastScrape scraper = FastScrape.open();
+        FastSpider spider = FastSpider.open();
 
-        // ── Phase 1: Live Concurrent Fetch ──────────────────────────────────
-        System.out.println(darkGray("[Phase 1]") + " " + boldWhite("Live Concurrent Network Ingestion") + darkGray(" (Downloading 10 heavy Wikipedia articles)"));
-        HttpClient http = HttpClient.newBuilder()
-                .executor(Executors.newVirtualThreadPerTaskExecutor())
-                .build();
+        // ── Phase 1: High-Speed WinHTTP Multi-Node Ingestion ─────────────────
+        System.out.println(darkGray("[Phase 1]") + " " + boldWhite("FastSpider Native WinHTTP Ingestion") + darkGray(" (Downloading 20 heavy Wikipedia nodes)"));
 
         long fetchT0 = System.currentTimeMillis();
-        List<CompletableFuture<HttpResponse<byte[]>>> futures = new ArrayList<>();
+        List<CompletableFuture<FastSpider.SpiderResponse>> futures = new ArrayList<>();
         for (String url : TARGET_PAGES) {
-            HttpRequest req = HttpRequest.newBuilder()
-                    .uri(URI.create(url))
-                    .header("User-Agent", "FastScrape-HeroDemo/0.1.1 (Java 17+; AVX2)")
-                    .build();
-            futures.add(http.sendAsync(req, HttpResponse.BodyHandlers.ofByteArray()));
+            futures.add(spider.fetchAsync(url));
         }
         CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
         long fetchDuration = System.currentTimeMillis() - fetchT0;
 
         List<byte[]> payloads = new ArrayList<>();
         long totalRawBytes = 0;
-        for (CompletableFuture<HttpResponse<byte[]>> f : futures) {
-            byte[] body = f.join().body();
+        for (CompletableFuture<FastSpider.SpiderResponse> f : futures) {
+            byte[] body = f.join().rawBody();
             payloads.add(body);
             totalRawBytes += body.length;
         }
 
+        double mbTotal = totalRawBytes / (1024.0 * 1024.0);
+        double mbPerSec = mbTotal / (Math.max(fetchDuration, 1) / 1000.0);
+
         System.out.printf("  %s %s across %s in %s (%s)\n\n",
                 darkGray("└── Ingested"),
-                boldWhite(String.format("%.2f MB raw HTML", totalRawBytes / (1024.0 * 1024.0))),
-                boldWhite("10 live articles"),
+                boldWhite(String.format("%.2f MB raw HTML", mbTotal)),
+                boldWhite("20 live nodes"),
                 boldWhite(String.format("%,d ms", fetchDuration)),
-                darkGray(String.format("%.1f MB/s", (totalRawBytes / (1024.0 * 1024.0)) / (fetchDuration / 1000.0))));
+                darkGray(String.format("%.1f MB/s via WinHTTP", mbPerSec)));
 
         // ── Phase 2: Microsecond Real-Time SIMD Parsing Stream ──────────────
-        System.out.println(darkGray("[Phase 2]") + " " + boldWhite("Zero-Allocation AVX2 Extraction Stream") + darkGray(" (Stripping tags, parsing titles, links & LLM text)"));
+        System.out.println(darkGray("[Phase 2]") + " " + boldWhite("AVX2 Extraction & CleanText Content Stream") + darkGray(" (Stripping tags, titles, links & LLM paragraphs)"));
         System.out.println();
 
         long totalParseNanos = 0;
@@ -90,31 +94,44 @@ public class Demo {
 
             long parseT0 = System.nanoTime();
             String cleanText = scraper.extractReadableText(html);
-            List<String> links = scraper.extractLinks(html);
-            List<String> headings = scraper.extractByTag(html, "h1");
+            List<String> rawLinks = scraper.extractLinks(html);
+            List<String> validLinks = filterWikiArticleLinks(rawLinks);
+            List<String> rawHeadings = scraper.extractByTag(html, "h1");
             long parseUs = (System.nanoTime() - parseT0) / 1000;
 
             totalParseNanos += (System.nanoTime() - parseT0);
             totalCleanChars += cleanText.length();
-            totalLinksExtracted += links.size();
+            totalLinksExtracted += validLinks.size();
 
             double reductionPct = 100.0 * (html.length - cleanText.length()) / html.length;
-            String h1 = headings.isEmpty() ? "Document" : headings.get(0).trim();
+
+            // Extract clean title without inner tags
+            String rawH1 = rawHeadings.isEmpty() ? "" : rawHeadings.get(0);
+            String cleanH1 = rawH1.isEmpty() ? extractPageTitleFromUrl(url) : scraper.extractReadableText(rawH1.getBytes(StandardCharsets.UTF_8)).trim();
+            if (cleanH1.isEmpty()) cleanH1 = extractPageTitleFromUrl(url);
 
             System.out.printf("  ├── %s %-48s %s %s %s %s\n",
                     boldWhite(String.format("[%02d]", i + 1)),
                     white(shortUrl),
                     darkGray(String.format("| %,6d KB HTML", html.length / 1024)),
                     boldWhite(String.format("| %,6d µs", parseUs)),
-                    darkGray(String.format("| %,5d links", links.size())),
+                    darkGray(String.format("| %,5d links", validLinks.size())),
                     darkGray(String.format("| -%.1f%% noise", reductionPct)));
 
-            // Show 3 preview links + heading info per page
-            System.out.printf("  │    ├── %s %s\n", darkGray("Title:"), boldWhite(truncate(h1, 60)));
-            int previewCount = Math.min(links.size(), 3);
+            // Title line
+            System.out.printf("  │    ├── %s %s\n", darkGray("Title:"), boldWhite(truncate(cleanH1, 70)));
+
+            // Extract first meaningful content paragraph for LLM
+            String summarySnippet = findFirstMeaningfulParagraph(cleanText);
+            if (!summarySnippet.isEmpty()) {
+                System.out.printf("  │    ├── %s %s\n", darkGray("Excerpt:"), white(truncate(summarySnippet, 95)));
+            }
+
+            // Stream 3 clean article links
+            int previewCount = Math.min(validLinks.size(), 3);
             for (int p = 0; p < previewCount; p++) {
                 boolean isLast = (p == previewCount - 1);
-                String lk = truncate(links.get(p), 62);
+                String lk = truncate(validLinks.get(p), 65);
                 System.out.printf("  │    %s %s %s\n",
                         darkGray(isLast ? "└──" : "├──"),
                         darkGray(String.format("[LINK %02d]", p + 1)),
@@ -124,7 +141,7 @@ public class Demo {
         System.out.println();
 
         // ── Phase 3: High-Fidelity LLM Context Preview ──────────────────────
-        System.out.println(darkGray("[Phase 3]") + " " + boldWhite("LLM Plaintext Compression Sample") + darkGray(" (Showing first 4 lines of extracted context from root node)"));
+        System.out.println(darkGray("[Phase 3]") + " " + boldWhite("LLM CleanText Representation Sample") + darkGray(" (Raw plaintext stream from root node)"));
         System.out.println();
 
         byte[] firstHtml = payloads.get(0);
@@ -133,10 +150,10 @@ public class Demo {
         int shownLines = 0;
         for (String line : lines) {
             String trimmed = line.trim();
-            if (!trimmed.isEmpty()) {
-                System.out.printf("  │  %s\n", white(truncate(trimmed, 110)));
+            if (trimmed.length() > 25 && !trimmed.startsWith("Jump to") && !trimmed.startsWith("Main menu")) {
+                System.out.printf("  │  %s\n", white(truncate(trimmed, 114)));
                 shownLines++;
-                if (shownLines >= 5) break;
+                if (shownLines >= 4) break;
             }
         }
         System.out.println();
@@ -147,10 +164,48 @@ public class Demo {
         double throughputMbPerSec = (totalRawBytes / (1024.0 * 1024.0)) / (Math.max(totalParseMs, 1) / 1000.0);
 
         System.out.println(darkGray("========================================================================================================================"));
-        System.out.printf(" " + boldWhite("SCRAPING COMPLETE:") + darkGray(" Processed ") + boldWhite(String.format("%.2f MB", totalRawBytes / (1024.0 * 1024.0))) + darkGray(" of live HTML in ") + boldWhite(String.format("%,d ms native AVX2 time", totalParseMs)) + darkGray(" (%s)\n"),
+        System.out.printf(" " + boldWhite("SCRAPING COMPLETE:") + darkGray(" Processed ") + boldWhite(String.format("%.2f MB", mbTotal)) + darkGray(" across 20 live nodes in ") + boldWhite(String.format("%,d ms native AVX2 time", totalParseMs)) + darkGray(" (%s)\n"),
                 boldWhite(String.format("%.1f GB/s SIMD throughput", throughputMbPerSec / 1024.0)));
-        System.out.printf(" " + darkGray("Extracted ") + boldWhite(String.format("%,d clean chars", totalCleanChars)) + darkGray(" (-%.1f%% noise stripped) and harvested ") + boldWhite(String.format("%,d total hyperlinks", totalLinksExtracted)) + darkGray(" for LLMs.\n"), overallReduction);
+        System.out.printf(" " + darkGray("Extracted ") + boldWhite(String.format("%,d clean chars", totalCleanChars)) + darkGray(" (-%.1f%% noise stripped) and harvested ") + boldWhite(String.format("%,d encyclopedic links", totalLinksExtracted)) + darkGray(" for LLMs.\n"), overallReduction);
         System.out.println(darkGray("========================================================================================================================"));
+    }
+
+    private static String findFirstMeaningfulParagraph(String text) {
+        String[] lines = text.split("\n");
+        for (String l : lines) {
+            String t = l.trim();
+            if (t.length() > 60 && !t.contains("disambiguation") && !t.startsWith("Jump to") && !t.startsWith("Main menu")) {
+                return t;
+            }
+        }
+        return "";
+    }
+
+    private static String extractPageTitleFromUrl(String url) {
+        int idx = url.lastIndexOf('/');
+        if (idx != -1 && idx + 1 < url.length()) {
+            return url.substring(idx + 1).replace('_', ' ');
+        }
+        return url;
+    }
+
+    private static List<String> filterWikiArticleLinks(List<String> rawHrefs) {
+        List<String> links = new ArrayList<>();
+        for (String href : rawHrefs) {
+            if (href == null || href.isEmpty()) continue;
+            if (href.startsWith("/wiki/")) {
+                String sub = href.substring(6);
+                if (!sub.contains(":") && !sub.contains("#") && !sub.contains("?") && !sub.equals("Main_Page")) {
+                    links.add("https://en.wikipedia.org" + href);
+                }
+            } else if (href.startsWith("https://en.wikipedia.org/wiki/")) {
+                String sub = href.substring(30);
+                if (!sub.contains(":") && !sub.contains("#") && !sub.contains("?") && !sub.equals("Main_Page")) {
+                    links.add(href);
+                }
+            }
+        }
+        return links.stream().distinct().toList();
     }
 
     private static String truncate(String text, int maxLen) {
