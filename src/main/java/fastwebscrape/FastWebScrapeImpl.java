@@ -12,7 +12,7 @@ class FastWebScrapeImpl implements FastWebScrape {
 
     static {
         // Load the JNI library using FastCore Unified Loader
-        FastCore.loadLibrary("FastWebScrape");
+        FastCore.loadLibrary("fastwebscrape");
     }
 
     // Native JNI methods
