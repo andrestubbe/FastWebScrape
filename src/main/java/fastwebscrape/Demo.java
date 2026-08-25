@@ -142,12 +142,38 @@ public class Demo {
         // ── Phase 1: High-Speed WinHTTP Multi-Node Ingestion ─────────────────
         System.out.println(darkGray("[Phase 1]") + " " + boldWhite("FastWebSpider Native WinHTTP Ingestion") + darkGray(" (Downloading " + TARGET_PAGES.size() + " live Wikipedia nodes via Virtual Threads)"));
 
+        java.util.concurrent.atomic.AtomicInteger completedCount = new java.util.concurrent.atomic.AtomicInteger(0);
+        java.util.concurrent.atomic.AtomicLong downloadedBytes = new java.util.concurrent.atomic.AtomicLong(0);
         long fetchT0 = System.currentTimeMillis();
+
         List<CompletableFuture<FastWebSpider.SpiderResponse>> futures = new ArrayList<>();
         for (String url : TARGET_PAGES) {
-            futures.add(spider.fetchAsync(url));
+            CompletableFuture<FastWebSpider.SpiderResponse> f = spider.fetchAsync(url);
+            f.thenAccept(resp -> {
+                completedCount.incrementAndGet();
+                downloadedBytes.addAndGet(resp.rawBody().length);
+            });
+            futures.add(f);
         }
-        CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
+
+        CompletableFuture<Void> allOf = CompletableFuture.allOf(futures.toArray(new CompletableFuture[0]));
+
+        // Real-time ticking HUD during concurrent download
+        while (!allOf.isDone()) {
+            long elapsed = System.currentTimeMillis() - fetchT0;
+            int done = completedCount.get();
+            double curMb = downloadedBytes.get() / (1024.0 * 1024.0);
+            double curRate = curMb / (Math.max(elapsed, 1) / 1000.0);
+            System.out.printf("\r  %s Ingesting live streams... %s / %s nodes (%s) | %s | %s",
+                    darkGray("├──"),
+                    boldWhite(String.format("%03d", done)),
+                    darkGray(String.valueOf(TARGET_PAGES.size())),
+                    boldWhite(String.format("%.2f MB", curMb)),
+                    boldWhite(String.format("%,d ms", elapsed)),
+                    darkGray(String.format("%.1f MB/s", curRate)));
+            Thread.sleep(30);
+        }
+        allOf.join();
         long fetchDuration = System.currentTimeMillis() - fetchT0;
 
         List<byte[]> payloads = new ArrayList<>();
@@ -161,7 +187,7 @@ public class Demo {
         double mbTotal = totalRawBytes / (1024.0 * 1024.0);
         double mbPerSec = mbTotal / (Math.max(fetchDuration, 1) / 1000.0);
 
-        System.out.printf("  %s %s across %s in %s (%s)\n\n",
+        System.out.printf("\r  %s %s across %s in %s (%s)                                           \n\n",
                 darkGray("└── Ingested"),
                 boldWhite(String.format("%.2f MB raw HTML", mbTotal)),
                 boldWhite(TARGET_PAGES.size() + " live nodes"),
