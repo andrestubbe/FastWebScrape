@@ -16,8 +16,37 @@ FastScrape is the data-extraction substrate of the **FastJava** web stack. It pr
 
 ---
 
+## Quick Start
 
-## Table of Contents
+```java
+import fastscrape.FastScrape;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
+
+public class Demo {
+    public static void main(String[] args) {
+        // 1. Open high-speed native AVX2 scraper
+        FastScrape scraper = FastScrape.open();
+
+        byte[] htmlData = ("<html><body><h1>SIMD Architecture</h1>" +
+                           "<p>Vector processing on modern CPUs.</p>" +
+                           "<a href=\"https://en.wikipedia.org/wiki/AVX-512\">AVX-512 Details</a>" +
+                           "</body></html>").getBytes(StandardCharsets.UTF_8);
+
+        // 2. Zero-allocation clean plain text extraction for LLMs
+        String cleanText = scraper.extractReadableText(htmlData);
+        System.out.println("Clean Text:\n" + cleanText);
+
+        // 3. Ultra-fast hyperlink harvesting
+        List<String> links = scraper.extractLinks(htmlData);
+        System.out.printf("Harvested %,d hyperlinks in microseconds.\n", links.size());
+    }
+}
+```
+
+---
+
+## 📑 Table of Contents
 - [Key Features](#key-features)
 - [Performance](#performance)
 - [API Quick Reference](#api-quick-reference)
