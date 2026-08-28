@@ -7,7 +7,7 @@
 
     <groupId>com.github.andrestubbe</groupId>
     <artifactId>FastWebScrape</artifactId>
-    <version>0.1.2</version>
+    <version>0.1.3</version>
     <packaging>jar</packaging>
 
     <name>FastWebScrape</name>
@@ -60,7 +60,7 @@
         <dependency>
             <groupId>com.github.andrestubbe</groupId>
             <artifactId>FastRegex</artifactId>
-            <version>0.1.0</version>
+            <version>0.1.1</version>
         </dependency>
         <!-- FastANSI -->
         <dependency>
@@ -72,7 +72,7 @@
         <dependency>
             <groupId>com.github.andrestubbe</groupId>
             <artifactId>FastWebSpider</artifactId>
-            <version>0.1.2</version>
+            <version>f783b3bd798dd85811d5917a7ca97a70b2c9c1f2</version>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>

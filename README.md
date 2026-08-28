@@ -1,6 +1,6 @@
-# FastWebScrape — High-Performance Native HTML/XML Extractor for Java
+# FastWebScrape 0.1.3 [ALPHA] — High-Performance Native HTML/XML Extractor for Java
 
-[![Status](https://img.shields.io/badge/status-0.1.1-brightgreen.svg)](https://github.com/andrestubbe/FastWebScrape/releases/tag/0.1.1)
+[![Status](https://img.shields.io/badge/status-0.1.3-brightgreen.svg)](https://github.com/andrestubbe/FastWebScrape/releases/tag/0.1.3)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Java](https://img.shields.io/badge/Java-17+-blue.svg)](https://www.java.com)
 [![Platform](https://img.shields.io/badge/Platform-Windows%2010+-lightgrey.svg)]()
@@ -113,14 +113,21 @@ Add the JitPack repository and the dependencies to your `pom.xml`:
     <dependency>
         <groupId>com.github.andrestubbe</groupId>
         <artifactId>FastWebScrape</artifactId>
-        <version>0.1.0</version>
+        <version>0.1.3</version>
     </dependency>
 
     <!-- FastCore (Required Native Loader) -->
     <dependency>
         <groupId>com.github.andrestubbe</groupId>
-        <artifactId>fastcore</artifactId>
+        <artifactId>FastCore</artifactId>
         <version>0.1.0</version>
+    </dependency>
+
+    <!-- FastRegex -->
+    <dependency>
+        <groupId>com.github.andrestubbe</groupId>
+        <artifactId>FastRegex</artifactId>
+        <version>0.1.1</version>
     </dependency>
 </dependencies>
 ```
@@ -132,15 +139,16 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.github.andrestubbe:FastWebScrape:0.1.0'
-    implementation 'com.github.andrestubbe:fastcore:0.1.0'
+    implementation 'com.github.andrestubbe:FastWebScrape:0.1.3'
+    implementation 'com.github.andrestubbe:FastCore:0.1.0'
+    implementation 'com.github.andrestubbe:FastRegex:0.1.1'
 }
 ```
 
 ### Option 3: Direct Download (No Build Tool)
 Download the latest JARs directly to add them to your classpath:
 
-1. 📦 **[FastWebScrape-0.1.0.jar](https://github.com/andrestubbe/FastWebScrape/releases/download/0.1.0/FastWebScrape-0.1.0.jar)** (The Core Library)
+1. 📦 **[FastWebScrape-0.1.3.jar](https://github.com/andrestubbe/FastWebScrape/releases/download/0.1.3/FastWebScrape-0.1.3.jar)** (The Core Library)
 2. ⚙️ **[fastcore-0.1.0.jar](https://github.com/andrestubbe/FastCore/releases/download/0.1.0/fastcore-0.1.0.jar)** (The Mandatory Native Loader)
 
 > [!IMPORTANT]
