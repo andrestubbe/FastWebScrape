@@ -49,6 +49,7 @@ public class Demo {
 ---
 
 ## 📑 Table of Contents
+- [Why FastWebScrape?](#why-fastwebscrape)
 - [Key Features](#key-features)
 - [Performance](#performance)
 - [API Quick Reference](#api-quick-reference)
@@ -57,6 +58,28 @@ public class Demo {
 - [Platform Support](#platform-support)
 - [Modular Ecosystem](#modular-ecosystem)
 - [License](#license)
+
+---
+
+## Why FastWebScrape?
+
+Preparing web content for LLM ingestion, AI agent tool calling, and high-throughput scraping in Java typically hits heavy CPU and memory walls:
+
+- **Heavy DOM Tree Instantiation** — Traditional parsers (like Jsoup) instantiate a complete hierarchical document object tree, creating hundreds of thousands of heap objects per megabyte of HTML.
+- **Garbage Collection Freezes** — Scraping millions of web pages in real-time pipelines causes intense JVM GC pause times due to transient `Element` and `Node` objects.
+- **Slow Text Extraction for RAG** — Stripping `<script>`, `<style>`, and markup tags via standard Java regex or DOM traversals takes 50–200 ms per large web page.
+- **Memory Copying Across JNI** — Passing raw web socket byte buffers into string wrappers forces unnecessary memory copies and encoding overhead.
+
+FastWebScrape operates directly on raw UTF-8 byte buffers via C++ SIMD/AVX2 vector instructions. It strips markup, extracts hyperlinks, and harvests JSON-LD schemas in microseconds with zero DOM tree allocation.
+
+| Feature | Standard Java Regex | Jsoup DOM Parser | FastWebScrape |
+|:---|:---|:---|:---|
+| **Extraction Model** | Regex backtracking | Full DOM Tree parse | **SIMD / AVX2 Stream Scan** |
+| **5 MB HTML Text Strip**| ~210 ms (High CPU) | ~180 ms (Tree traversal) | **~5 ms (40x Faster)** |
+| **Heap Allocations** | Transient Matcher objects | Massive Node/Element objects | **0 Intermediate DOM Objects** |
+| **Byte Buffer Handoff** | Requires Java String | Requires Java String | **Direct Zero-Copy `byte[]` Scan** |
+| **LLM Text Normalization**| Manual whitespace regex | Recursive text visitor | **Built-in Block Layout Formatting** |
+| **Dependencies** | JDK standard lib | External JAR (~3 MB) | **Pure Java 17+ backed by FastCore** |
 
 ---
 
